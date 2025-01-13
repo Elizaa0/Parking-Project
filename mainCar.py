@@ -2,7 +2,6 @@ import datetime
 from PyQt5 import QtWidgets, QtCore, uic, QtGui
 from detect import detect_license_plate
 
-
 class Ui(QtWidgets.QMainWindow):
     def __init__(self):
         super(Ui, self).__init__()
@@ -25,11 +24,16 @@ class Ui(QtWidgets.QMainWindow):
         if file_path:
             pixmap = QtGui.QPixmap(file_path)
             self.imagePreview.setPixmap(pixmap.scaled(self.imagePreview.size(), QtCore.Qt.KeepAspectRatio))
+
+            # Rozpoznanie tablicy za pomocą alpr.exe
             license_plate = detect_license_plate(file_path)
             if license_plate:
+                self.comboBoxRejestracja.clear()
                 self.comboBoxRejestracja.addItem(license_plate)
                 self.label_2.setText(f"Rozpoznano: {license_plate}")
             else:
+                self.comboBoxRejestracja.clear()
+                self.comboBoxRejestracja.addItem("-")
                 self.label_2.setText("Nie rozpoznano tablicy.")
 
     def handle_entry(self):
@@ -72,13 +76,11 @@ class Ui(QtWidgets.QMainWindow):
                 button.setStyleSheet("background-color: green; color: black;")
                 button.setText(f"M{i + 1}")
 
-
 def main():
     app = QtWidgets.QApplication([])
     window = Ui()
     window.show()
     app.exec_()
-
 
 if __name__ == "__main__":
     main()
